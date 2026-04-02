@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Officer Registration - Marine Command Squad</title>
+
+<link rel="stylesheet" href="officer_register.css">
+
+</head>
+
+<body>
+
+<header>
+<h2>Marine Command Squad — Officer Registration</h2>
+</header>
+
+<main class="register-container">
+
+<section class="form-card officer-card">
+
+<h3>Officer Registration</h3>
+
+<form action="officer_login.html" method="POST">
+
+<!-- Aadhaar Number -->
+<input type="text" name="aadhaar" placeholder="Enter Aadhaar Number" pattern="[0-9]{12}" required>
+
+<!-- Name Fields -->
+<input type="text" name="officerName" placeholder="Enter Your First Name" required>
+
+<input type="text" name="middleName" placeholder="Enter Your Middle Name">
+
+<input type="text" name="surname" placeholder="Enter Your Surname" required>
+
+<!-- Parent Details -->
+<input type="text" name="fatherName" placeholder="Enter Father's Name" required>
+
+<input type="text" name="motherName" placeholder="Enter Mother's Name" required>
+
+<!-- Gender -->
+<select name="gender" required>
+
+<option value="" disabled selected>Select Gender</option>
+
+<option value="male">Male</option>
+
+<option value="female">Female</option>
+
+<option value="other">Other</option>
+
+</select>
+
+<!-- Date of Birth -->
+<input type="date" name="dob" required>
+
+<!-- Mobile Number -->
+<input type="tel" name="mobileNumber" placeholder="Enter Mobile Number" pattern="[0-9]{10}" required>
+
+<!-- Password -->
+<input type="password" name="password" placeholder="Enter Your Password" required>
+
+<input type="password" name="confirmPassword" placeholder="Confirm Your Password" required>
+
+<!-- Submit -->
+<button type="submit" class="btn btn-officer">Register</button>
+
+</form>
+
+<div class="footer-links">
+
+<p>Already registered? <a href="officer_login.html">Login Here</a></p>
+
+</div>
+
+</section>
+
+</main>
+
+</body>
+</html>

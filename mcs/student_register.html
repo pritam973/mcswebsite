@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Cadet Registration - Marine Command Squad</title>
+
+<!-- CSS LINK -->
+<link rel="stylesheet" href="student_register.css">
+
+</head>
+
+<body>
+
+<header>
+<h2>Marine Command Squad - Cadet Registration</h2>
+</header>
+
+<main class="register-container">
+
+<section class="form-card">
+
+<h3>Cadet Registration</h3>
+
+<form action="student_login.html" method="POST">
+
+<!-- Aadhaar -->
+<input type="text" name="aadhaar" placeholder="Enter Aadhaar Number" pattern="[0-9]{12}" required>
+
+<!-- Names -->
+<input type="text" name="cadetName" placeholder="Enter First Name" required>
+
+<input type="text" name="middleName" placeholder="Enter Middle Name">
+
+<input type="text" name="surname" placeholder="Enter Surname" required>
+
+<!-- Parents -->
+<input type="text" name="fatherName" placeholder="Enter Father's Name" required>
+
+<input type="text" name="motherName" placeholder="Enter Mother's Name" required>
+
+<!-- Gender -->
+<select name="gender" required>
+<option value="" disabled selected>Select Gender</option>
+<option value="male">Male</option>
+<option value="female">Female</option>
+<option value="other">Other</option>
+</select>
+
+<!-- DOB -->
+<input type="date" name="dob" required>
+
+<!-- Mobile -->
+<input type="tel" name="mobile" placeholder="Enter Mobile Number" pattern="[0-9]{10}" required>
+
+<!-- Password -->
+<input type="password" name="password" placeholder="Enter Password" required>
+
+<input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+
+<!-- Submit -->
+<button type="submit" class="btn">Register</button>
+
+</form>
+
+<div class="footer-links">
+<p>Already registered? <a href="cadet_login.html">Login Here</a></p>
+</div>
+
+</section>
+
+</main>
+
+</body>
+</html>

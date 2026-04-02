@@ -1,0 +1,216 @@
+/* RESET */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    }
+    
+    /* BODY */
+    body{
+    font-family:'Roboto',sans-serif;
+    background:linear-gradient(to bottom, rgba(0,31,63,0.85), rgba(0,64,128,0.9)),
+    url('mcs.jpg.jpeg') no-repeat center center fixed;
+    background-size:cover;
+    color:#fff;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    }
+    
+    /* NAVBAR */
+    .navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#001f3f;
+    padding:15px 30px;
+    color:#FFD700;
+    border-bottom:3px solid #FFD700;
+    }
+    
+    /* LOGO */
+    .logo{
+    font-size:1.6em;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Merriweather',serif;
+    }
+    
+    .logo-img{
+    height:45px;
+    width:auto;
+    border-radius:6px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.3);
+    }
+    
+    /* NAV LINKS */
+    .nav-links{
+    list-style:none;
+    display:flex;
+    gap:20px;
+    }
+    
+    .nav-links a{
+    color:#FFD700;
+    text-decoration:none;
+    font-weight:600;
+    transition:0.3s;
+    }
+    
+    .nav-links a:hover{
+    color:#fff;
+    }
+    
+    /* DROPDOWN */
+    .dropdown{
+    position:relative;
+    }
+    
+    .dropdown-menu{
+    list-style:none;
+    position:absolute;
+    top:100%;
+    left:0;
+    background:#001a33;
+    border:2px solid #FFD700;
+    border-radius:6px;
+    min-width:180px;
+    opacity:0;
+    visibility:hidden;
+    transition:0.3s;
+    margin-top:10px;
+    padding:10px 0;
+    box-shadow:0 8px 16px rgba(0,0,0,0.3);
+    }
+    
+    .dropdown:hover .dropdown-menu{
+    opacity:1;
+    visibility:visible;
+    }
+    
+    .dropdown-menu a{
+    display:block;
+    padding:12px 20px;
+    color:#FFD700;
+    font-weight:600;
+    }
+    
+    .dropdown-menu a:hover{
+    background:#FFD700;
+    color:#001f3f;
+    }
+    
+    /* HERO SECTION */
+    .hero{
+    text-align:center;
+    padding:100px 20px;
+    background:linear-gradient(135deg, rgba(0,31,63,0.85), rgba(0,64,128,0.85)),
+    url('navy-ship.jpg') no-repeat center center;
+    background-size:cover;
+    color:#FFD700;
+    border-radius:0 0 40px 40px;
+    }
+    
+    .hero h1{
+    font-size:clamp(2.5rem,5vw,3.5rem);
+    margin-bottom:20px;
+    font-family:'Merriweather',serif;
+    }
+    
+    .hero p{
+    font-size:clamp(1rem,2vw,1.3rem);
+    margin-bottom:30px;
+    color:#fff;
+    line-height:1.6;
+    }
+    
+    /* BUTTONS */
+    .btn{
+    background:#FFD700;
+    color:#001f3f;
+    padding:12px 24px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:700;
+    transition:0.3s;
+    display:inline-block;
+    }
+    
+    .btn:hover{
+    background:#fff;
+    transform:translateY(-2px);
+    }
+    
+    .btn-officer{
+    background:#c82333;
+    color:#fff;
+    }
+    
+    .btn-officer:hover{
+    background:#a71d2a;
+    }
+    
+    /* CARDS */
+    .card-container{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:30px;
+    padding:50px 20px;
+    flex-grow:1;
+    }
+    
+    .info-card{
+    background:rgba(255,255,255,0.95);
+    padding:30px;
+    border-radius:12px;
+    border:2px solid #FFD700;
+    box-shadow:0 8px 25px rgba(0,0,0,0.2);
+    text-align:center;
+    flex:1 1 300px;
+    max-width:400px;
+    transition:0.3s;
+    }
+    
+    .info-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 12px 30px rgba(0,0,0,0.25);
+    }
+    
+    .info-card h2{
+    margin-bottom:15px;
+    font-size:1.8em;
+    font-family:'Merriweather',serif;
+    color:#001f3f;
+    }
+    
+    .info-card p{
+    margin-bottom:20px;
+    color:#333;
+    }
+    
+    /* FOOTER */
+    footer{
+    text-align:center;
+    padding:20px;
+    background:#001f3f;
+    color:#FFD700;
+    font-size:0.9em;
+    border-top:3px solid #FFD700;
+    }
+    
+    /* RESPONSIVE */
+    @media(max-width:768px){
+    
+    .nav-links{
+    flex-direction:column;
+    gap:10px;
+    }
+    
+    .hero{
+    padding:70px 20px;
+    }
+    
+    }

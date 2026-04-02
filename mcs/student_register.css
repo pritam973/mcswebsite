@@ -1,0 +1,131 @@
+/* Reset */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI, Arial, sans-serif;
+    }
+    
+    /* Body background */
+    body{
+    background:linear-gradient(135deg,#071a3d,#0a2d63,#071a3d);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    color:white;
+    }
+    
+    /* Header (Navy theme instead of tricolor) */
+    header{
+    width:100%;
+    text-align:center;
+    padding:20px;
+    font-size:22px;
+    font-weight:bold;
+    background:#071a3d;
+    color:#ffd700;
+    box-shadow:0 4px 10px rgba(0,0,0,0.4);
+    }
+    
+    /* Container */
+    .register-container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-top:40px;
+    width:100%;
+    }
+    
+    /* Form card */
+    .form-card{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(10px);
+    padding:35px;
+    border-radius:12px;
+    width:380px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.6);
+    border:1px solid rgba(255,255,255,0.2);
+    }
+    
+    /* Officer card highlight */
+    .officer-card{
+    border-left:5px solid #ff9933;
+    }
+    
+    /* Title (Golden) */
+    .form-card h3{
+    text-align:center;
+    margin-bottom:20px;
+    color:#ffd700;
+    }
+    
+    /* Inputs */
+    .form-card input,
+    .form-card select{
+    width:100%;
+    padding:12px;
+    margin-bottom:12px;
+    border:none;
+    border-radius:6px;
+    outline:none;
+    font-size:14px;
+    background:rgba(255,255,255,0.95);
+    }
+    
+    /* Focus effect */
+    .form-card input:focus,
+    .form-card select:focus{
+    box-shadow:0 0 6px #ff9933;
+    }
+    
+    /* Button */
+    .btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:6px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    background:linear-gradient(90deg,#ff9933,#138808);
+    color:white;
+    transition:0.3s;
+    }
+    
+    /* Hover */
+    .btn:hover{
+    transform:scale(1.03);
+    box-shadow:0 4px 15px rgba(0,0,0,0.5);
+    }
+    
+    /* Footer */
+    .footer-links{
+    text-align:center;
+    margin-top:15px;
+    font-size:14px;
+    }
+    
+    .footer-links a{
+    color:#ffcc00;
+    text-decoration:none;
+    font-weight:bold;
+    }
+    
+    .footer-links a:hover{
+    text-decoration:underline;
+    }
+    
+    /* Responsive */
+    @media(max-width:450px){
+    
+    .form-card{
+    width:90%;
+    padding:25px;
+    }
+    
+    header{
+    font-size:18px;
+    }
+    
+    }

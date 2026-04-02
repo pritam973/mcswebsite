@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Login Portal - Marine Command Squad</title>
+
+<link rel="stylesheet" href="cadet_login.css">
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+
+<div class="logo">
+<img src="logo.jpeg" alt="MCS Logo" class="logo-img">
+<span>Marine Command Squad</span>
+</div>
+
+<ul class="nav-links">
+<li><a href="home.html">HOME</a></li>
+<li><a href="about.html">About</a></li>
+<li><a href="contact.html">Contact Us</a></li>
+</ul>
+
+</nav>
+
+<header>
+<h1>Login</h1>
+</header>
+
+<main class="main-login-container">
+
+<!-- Cadet Login -->
+<section class="login-container">
+
+<h3>CADET</h3>
+
+<form action="cadet_login_process.php" method="POST">
+
+<input type="tel" name="mobnumber" placeholder="Enter Your Mobile Number" required>
+
+<input type="password" name="password" placeholder="Enter Your Password" required>
+
+<a href="cadet_forgot.html">Forgot Cadet Password?</a>
+
+<button type="submit" class="btn">Login</button>
+
+</form>
+
+<div class="footer-links">
+
+<p>New recruit? <a href="student_register.html">Register Here</a></p>
+
+</div>
+
+</section>
+
+</main>
+
+</body>
+</html>

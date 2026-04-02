@@ -1,0 +1,128 @@
+/* Page background */
+body{
+    background:linear-gradient(135deg,#071a3d,#0a2d63,#071a3d);
+    font-family:Roboto, sans-serif;
+    color:white;
+    margin:0;
+    }
+    
+    /* Navigation bar */
+    .navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 40px;
+    background:#071a3d;
+    box-shadow:0 4px 10px rgba(0,0,0,0.4);
+    }
+    
+    .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#ffd700;
+    font-weight:bold;
+    }
+    
+    .logo-img{
+    width:40px;
+    }
+    
+    .nav-links{
+    list-style:none;
+    display:flex;
+    gap:20px;
+    }
+    
+    .nav-links a{
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+    }
+    
+    .nav-links a:hover{
+    color:#ffd700;
+    }
+    
+    /* Dashboard header */
+    .dashboard-header{
+    text-align:center;
+    margin-top:30px;
+    }
+    
+    /* Marine Command Squad title */
+    .dashboard-header h1{
+    color:#ffd700;
+    font-size:34px;
+    margin-bottom:5px;
+    }
+    
+    /* Officer Dashboard subtitle */
+    .dashboard-header h2{
+    color:white;
+    font-size:22px;
+    margin-bottom:10px;
+    }
+    
+    /* Enrollment form container */
+    .form-container{
+    width:520px;
+    margin:40px auto;
+    background:rgba(255,255,255,0.08);
+    padding:35px;
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.6);
+    border:1px solid rgba(255,255,255,0.2);
+    }
+    
+    /* Enrollment form title */
+    .form-container h2{
+    color:#ffd700;
+    text-align:center;
+    margin-bottom:20px;
+    }
+    
+    /* Labels */
+    form label{
+    display:block;
+    margin-bottom:10px;
+    font-weight:bold;
+    }
+    
+    /* Inputs */
+    input,
+    textarea,
+    select{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    margin-bottom:12px;
+    border-radius:6px;
+    border:none;
+    outline:none;
+    }
+    
+    /* Focus effect */
+    input:focus,
+    textarea:focus,
+    select:focus{
+    box-shadow:0 0 6px #ff9933;
+    }
+    
+    /* Submit button */
+    button{
+    background:linear-gradient(90deg,#ff9933,#138808);
+    color:white;
+    padding:12px;
+    border:none;
+    width:100%;
+    font-weight:bold;
+    border-radius:6px;
+    cursor:pointer;
+    transition:0.3s;
+    }
+    
+    button:hover{
+    transform:scale(1.03);
+    box-shadow:0 4px 15px rgba(0,0,0,0.5);
+    }

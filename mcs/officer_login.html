@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Login Portal - Marine Command Squad</title>
+
+<link rel="stylesheet" href="officer_login.css">
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+
+<div class="logo">
+<img src="logo.jpeg" alt="MCS Logo" class="logo-img">
+<span>Marine Command Squad</span>
+</div>
+
+<ul class="nav-links">
+<li><a href="home.html">HOME</a></li>
+<li><a href="about.html">About</a></li>
+<li><a href="contact.html">Contact Us</a></li>
+</ul>
+
+</nav>
+
+<header>
+<h1>Login</h1>
+</header>
+
+<!-- Officer Login -->
+<section class="login-container officer-border">
+
+<h3>OFFICER</h3>
+
+<p>Authorized Personnel Only</p>
+
+<form action="officer_login_process.php" method="POST">
+
+<input type="tel" name="mobileNumber" placeholder="Enter Your Mobile Number" required>
+
+<input type="password" name="password" placeholder="Enter Your Password" required>
+
+<a href="officer_forgot.html">Forgot Password?</a>
+
+<button type="submit" class="btn btn-officer">Secure Login</button>
+
+</form>
+
+<div class="footer-links">
+
+<p>Need credentials? <a href="cadet_register.html">Submit Registration Request</a></p>
+
+</div>
+
+</section>
+
+</body>
+</html>
