@@ -119,6 +119,8 @@ echo "<p><b>DOB:</b> $dob</p>";
 echo "<p><b>Mobile:</b> $mobile</p>";
 echo "<img src='$photo' width='150' alt='Cadet Photo'><hr>";
 
+echo "<p><a href='home.html'>Go to Home Page</a></p>";
+
 // ------------------------
 // PDF Generation
 // ------------------------
