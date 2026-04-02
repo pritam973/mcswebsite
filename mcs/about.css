@@ -1,0 +1,138 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body */
+body {
+  font-family: 'Roboto', sans-serif;
+  background: #001f3f; /* Solid dark blue background */
+  color: #FFD700;      /* Golden text color */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #001f3f;
+  padding: 15px 30px;
+  color: #FFD700;
+  border-bottom: 3px solid #FFD700;
+}
+
+.navbar .logo {
+  font-size: 1.6em;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Merriweather', serif;
+}
+
+.logo-img {
+  height: 45px;
+  width: auto;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* Nav Links */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  color: #FFD700;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #fff;
+}
+
+/* Hero Section */
+.hero {
+  text-align: center;
+  padding: 100px 20px;
+  background: #001f3f; /* Dark blue hero background */
+  color: #FFD700;      /* Golden text */
+  border-radius: 0 0 40px 40px;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  margin-bottom: 20px;
+  font-family: 'Merriweather', serif;
+  color: #FFD700; /* Golden heading */
+}
+
+.hero p {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  margin-bottom: 30px;
+  color: #FFD700; /* Golden paragraph text */
+}
+
+/* About Section */
+.about-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+/* center section titles and limit width of paragraphs */
+.about-section {
+  text-align: center;
+}
+
+.about-section h2 {
+  color: #FFD700; /* Golden section titles */
+  font-family: 'Merriweather', serif;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.about-section p,
+.about-section ul li {
+  color: #FFD700; /* Golden body text */
+}
+
+/* restrict paragraph width so text is taller rather than very wide */
+.about-section p {
+  max-width: 700px;
+  margin: 0 auto 1em;
+  text-align: justify;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #001f3f;
+  color: #FFD700;
+  font-size: 0.9em;
+  border-top: 3px solid #FFD700;
+}
+.about-img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 10px;
+  margin: 15px 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin: 20px 0;
+}

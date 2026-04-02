@@ -18,15 +18,16 @@
     }
     
     /* NAVBAR */
-    .navbar{
+        .navbar{
+    width:100%;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    background:#001f3f;
-    padding:15px 30px;
-    color:#FFD700;
-    border-bottom:3px solid #FFD700;
+    padding:15px 40px;
+    background:#071a3d;
+    box-shadow:0 4px 10px rgba(0,0,0,0.4);
     }
+    
     
     /* LOGO */
     .logo{
