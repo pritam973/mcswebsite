@@ -1,42 +1,67 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+require_once 'config.php';
 
-$conn = mysqli_connect("localhost","root","","mcs1");
-
-if(!$conn){
-die("Connection Failed: " . mysqli_connect_error());
+// Validate input
+$required_fields = ['aadhaar', 'officerName', 'middleName', 'surname', 'fatherName', 'motherName', 'gender', 'dob', 'mobileNumber', 'password', 'confirmPassword'];
+foreach ($required_fields as $field) {
+    if (!isset($_POST[$field]) || empty(trim($_POST[$field]))) {
+        die("Missing required field: $field");
+    }
 }
 
-$aadhaar = $_POST['aadhaar'];
-$name = $_POST['officerName'];
-$middle = $_POST['middleName'];
-$surname = $_POST['surname'];
-$father = $_POST['fatherName'];
-$mother = $_POST['motherName'];
-$gender = $_POST['gender'];
-$dob = $_POST['dob'];
-$mobile = $_POST['mobileNumber'];
-$password = $_POST['password'];
-$confirmPassword = $_POST['confirmPassword'];
+// Sanitize input
+$aadhaar = trim($_POST['aadhaar']);
+$name = trim($_POST['officerName']);
+$middle = trim($_POST['middleName']);
+$surname = trim($_POST['surname']);
+$father = trim($_POST['fatherName']);
+$mother = trim($_POST['motherName']);
+$gender = trim($_POST['gender']);
+$dob = trim($_POST['dob']);
+$mobile = trim($_POST['mobileNumber']);
+$password = trim($_POST['password']);
+$confirmPassword = trim($_POST['confirmPassword']);
 
-if($password != $confirmPassword){
-die("Passwords do not match");
+// Validate Aadhaar (12 digits)
+if (!preg_match('/^[0-9]{12}$/', $aadhaar)) {
+    die("Invalid Aadhaar number");
+}
+
+// Validate mobile (10 digits)
+if (!preg_match('/^[0-9]{10}$/', $mobile)) {
+    die("Invalid mobile number");
+}
+
+// Validate password strength
+if (strlen($password) < 6) {
+    die("Password must be at least 6 characters");
+}
+
+if ($password !== $confirmPassword) {
+    die("Passwords do not match");
 }
 
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-$sql = "INSERT INTO officer_register 
-(aadhaar,officerName,middleName,surname,fatherName,motherName,gender,dob,mobileNumber,password)
-VALUES
-('$aadhaar','$name','$middle','$surname','$father','$mother','$gender','$dob','$mobile','$hashed_password')";
+// Use prepared statement
+$stmt = $conn->prepare("INSERT INTO officer_register 
+(aadhaar, officerName, middleName, surname, fatherName, motherName, gender, dob, mobileNumber, password)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-if(mysqli_query($conn,$sql)){
-echo "Officer Registration Successful";
-}
-else{
-echo "Error: " . mysqli_error($conn);
+if (!$stmt) {
+    die("Database error: " . $conn->error);
 }
 
+$stmt->bind_param("ssssssssss", $aadhaar, $name, $middle, $surname, $father, $mother, $gender, $dob, $mobile, $hashed_password);
+
+if ($stmt->execute()) {
+    echo "Officer Registration Successful";
+    $stmt->close();
+} else {
+    echo "Error: " . $stmt->error;
+    $stmt->close();
+}
+
+mysqli_close($conn);
 ?>

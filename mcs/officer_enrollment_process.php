@@ -1,18 +1,11 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
+require_once 'config.php';
 session_start();
 
 if(!isset($_SESSION['officer_id'])){
     header("Location: officer_login.html");
     exit();
-}
-
-// Database connection
-$conn = mysqli_connect("localhost","root","","mcs1");
-if(!$conn){
-    die("Database connection failed: " . mysqli_connect_error());
 }
 
 // Collect form data safely
@@ -57,15 +50,25 @@ $medicalCert = uploadFile("medicalCert",$upload_dir);
 $photo = uploadFile("photo",$upload_dir);
 $signature = uploadFile("signature",$upload_dir);
 
-// Insert into database
-$sql = "INSERT INTO officer_enrollment
+// Insert into database using prepared statement
+$stmt = $conn->prepare("INSERT INTO officer_enrollment
 (officer_id,name,rank,registration_number,dob,nationality,address,state,district,mobile,bloodgroup,gender,police_station,qualification,institution,idmark,aadhaar,aadhaarCard,bankPassbook,birthCert,institutionCert,declaration,medicalCert,photo,signature)
 VALUES
-('$officer_id','$name','$rank','$registration_number','$dob','$nationality','$address','$state','$district','$mobile','$bloodgroup','$gender','$police_station','$qualification','$institution','$idmark','$aadhaar','$aadhaarCard','$bankPassbook','$birthCert','$institutionCert','$declaration','$medicalCert','$photo','$signature')";
+(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
-if(!mysqli_query($conn,$sql)){
-    die("SQL Error: ".mysqli_error($conn));
+if (!$stmt) {
+    die("Database error: " . $conn->error);
 }
+
+$stmt->bind_param("sssssssssssssssssssssss",
+    $officer_id, $name, $rank, $registration_number, $dob, $nationality, $address, $state, $district, $mobile, $bloodgroup, $gender, $police_station, $qualification, $institution, $idmark, $aadhaar, $aadhaarCard, $bankPassbook, $birthCert, $institutionCert, $declaration, $medicalCert, $photo, $signature
+);
+
+if (!$stmt->execute()) {
+    die("SQL Error: " . $stmt->error);
+}
+
+$stmt->close();
 
 // Generate PDF
 require('fpdf/fpdf.php');

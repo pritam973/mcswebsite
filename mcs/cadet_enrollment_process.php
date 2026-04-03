@@ -1,6 +1,5 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors',1);
+require_once 'config.php';
 session_start();
 
 if($_SERVER['REQUEST_METHOD'] !== 'POST'){
@@ -11,11 +10,6 @@ if($_SERVER['REQUEST_METHOD'] !== 'POST'){
 if(!isset($_SESSION['cadet_id'])){
     header("Location: cadet_login.html");
     exit();
-}
-
-$conn = mysqli_connect("localhost","root","", "mcs1");
-if(!$conn){
-    die("DB Connection failed: ".mysqli_connect_error());
 }
 
 // Form Data

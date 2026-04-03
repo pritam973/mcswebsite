@@ -1,0 +1,33 @@
+# Environment and configuration files
+.env
+.env.local
+config.php
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Uploads and temporary files
+uploads/*
+!uploads/.gitkeep
+
+# Database backups
+*.sql
+!mcs.sql
+
+# Composer and npm
+vendor/
+node_modules/
+composer.lock
+package-lock.json
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log

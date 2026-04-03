@@ -1,12 +1,6 @@
 <?php
+require_once 'config.php';
 session_start();
-
-// Database connection
-$conn = mysqli_connect("localhost", "root", "", "mcs1");
-
-if (!$conn) {
-    die("Database Connection Failed");
-}
 
 // Check if user is already logged in
 if (isset($_SESSION['cadet_id'])) {
