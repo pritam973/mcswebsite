@@ -70,44 +70,83 @@ if (!$stmt->execute()) {
 
 $stmt->close();
 
-// Generate PDF
+// ------------------------
+// Generate and Download PDF
+// ------------------------
 require('fpdf/fpdf.php');
+
 $officer_name = $_SESSION['officer_name'];
-$pdf = new FPDF();
+$officer_id = $_SESSION['officer_id'];
+
+$pdf = new FPDF('P','mm','A4');
+$pdf->SetAutoPageBreak(true, 15);
 $pdf->AddPage();
-$pdf->SetFont('Arial','B',16);
-$pdf->Cell(0,10,'Officer Enrollment Form',0,1,'C');
+
+// Logo top center
+$logoPath = 'logo.jpeg';
+if (file_exists($logoPath)) {
+    $pdf->Image($logoPath, 85, 10, 40);
+}
+
+$pdf->Ln(30);
+$pdf->SetFont('Arial','B',18);
+$pdf->Cell(0,10,'MARINE COMMAND SQUAD',0,1,'C');
+$pdf->SetFont('Arial','B',14);
+$pdf->Cell(0,10,'OFFICER ENROLLMENT FORM',0,1,'C');
 $pdf->Ln(5);
+
+// Officer runtime info
+$pdf->SetFont('Arial','B',12);
+$pdf->Cell(35,8,'Processed by:',0,0);
 $pdf->SetFont('Arial','',12);
-$pdf->Cell(0,8,"Processed by Officer: $officer_name (ID: $officer_id)",0,1);
+$pdf->Cell(0,8,"$officer_name (ID: $officer_id)",0,1);
 $pdf->Ln(3);
 
-// Add form details
+// Officer photo box
+if (file_exists($photo) && !empty($photo)) {
+    $pdf->Image($photo, 145, 52, 45, 55);
+} else {
+    $pdf->Rect(145, 50, 45, 55);
+    $pdf->SetXY(145, 106);
+    $pdf->SetFont('Arial','I',8);
+    $pdf->Cell(45,4,'Photo',0,0,'C');
+}
+
+$pdf->SetXY(10, 55);
+
 $fields = [
-    'Full Name' => $name,
-    'Rank' => $rank,
-    'Registration No' => $registration_number,
-    'Date of Birth' => $dob,
-    'Nationality' => $nationality,
+    'Reg No.' => $registration_number,
+    'Name' => $name,
     'Address' => $address,
+    'Blood Group' => $bloodgroup,
+    'Contact No.' => $mobile,
+    'Rank' => $rank,
+    'DOB' => $dob,
+    'Nationality' => $nationality,
     'State' => $state,
     'District' => $district,
-    'Mobile' => $mobile,
-    'Blood Group' => $bloodgroup,
     'Gender' => $gender,
     'Police Station' => $police_station,
     'Qualification' => $qualification,
     'Institution' => $institution,
-    'Identification Mark' => $idmark,
-    'Aadhaar No' => $aadhaar
+    'ID Mark' => $idmark,
+    'Aadhaar' => $aadhaar
 ];
 
-foreach($fields as $label => $value){
-    $pdf->Cell(50,8,$label.':',0,0);
-    $pdf->MultiCell(0,8,$value);
+$pdf->SetFont('Arial','',11);
+foreach ($fields as $label => $value) {
+    $pdf->SetFont('Arial','B',11);
+    $pdf->Cell(40,7,$label.':',0,0);
+    $pdf->SetFont('Arial','',11);
+    $pdf->MultiCell(90,7,$value,0,1);
 }
 
-// Output PDF to browser
-$pdf->Output('I', 'Officer_Enrollment_'.$name.'.pdf');
+echo "<h2>Officer Enrollment Successful!</h2>";
+echo "<p><strong>Registration No:</strong> $registration_number</p>";
+echo "<p><strong>Name:</strong> $name</p>";
+echo "<p><strong>Mobile:</strong> $mobile</p>";
+echo "<p><strong>Blood Group:</strong> $bloodgroup</p>";
+echo "<p><a href='officer_enrollment.php'>Submit Another Enrollment</a></p>";
 
-?>
+mysqli_close($conn);
+exit();

@@ -103,57 +103,81 @@ if(!$execResult){
 $stmt->close();
 
 // ------------------------
-// Show Details
-// ------------------------
-echo "<h2>Enrollment Successful!</h2>";
-echo "<p><b>Registration No:</b> $cadet_id</p>";
-echo "<p><b>Name:</b> $cadet_name</p>";
-echo "<p><b>Gender:</b> $gender</p>";
-echo "<p><b>DOB:</b> $dob</p>";
-echo "<p><b>Mobile:</b> $mobile</p>";
-echo "<img src='$photo' width='150' alt='Cadet Photo'><hr>";
-
-echo "<p><a href='home.html'>Go to Home Page</a></p>";
-
-// ------------------------
-// PDF Generation
+// Generate and Download PDF
 // ------------------------
 require('fpdf/fpdf.php');
 
-$pdf=new FPDF();
+$pdf = new FPDF('P','mm','A4');
+$pdf->SetAutoPageBreak(true, 15);
 $pdf->AddPage();
-$pdf->SetFont('Arial','B',16);
-$pdf->Cell(0,10,'Cadet Enrollment Form',0,1,'C');
-$pdf->Ln(5);
-$pdf->SetFont('Arial','',12);
-$pdf->Cell(50,8,'Registration No:',0,0);
-$pdf->Cell(0,8,$cadet_id,0,1);
 
-$fields=[
-'Full Name'=>$cadet_name,'Father'=>$father,'Mother'=>$mother,'DOB'=>$dob,
-'Nationality'=>$nationality,'Address'=>$address,'State'=>$state,'District'=>$district,
-'Mobile'=>$mobile,'Blood Group'=>$bloodgroup,'Gender'=>$gender,'Police'=>$police,
-'Qualification'=>$qualification,'School'=>$school,'Identification Mark'=>$idmark,'Aadhaar No'=>$aadhaar
+// Logo top center
+$logoPath = 'logo.jpeg';
+if (file_exists($logoPath)) {
+    $pdf->Image($logoPath, 85, 10, 40);
+}
+
+$pdf->Ln(30);
+$pdf->SetFont('Arial','B',18);
+$pdf->Cell(0,10,'MARINE COMMAND SQUAD',0,1,'C');
+$pdf->SetFont('Arial','B',14);
+$pdf->Cell(0,10,'CADET ENROLLMENT FORM',0,1,'C');
+$pdf->Ln(5);
+
+// Cadet identity block
+$pdf->SetFont('Arial','B',12);
+$pdf->Cell(35,8,'Registration:',0,0);
+$pdf->SetFont('Arial','',12);
+$pdf->Cell(0,8,$cadet_id,0,1);
+$pdf->Ln(3);
+
+// Portrait area
+if (file_exists($photo) && !empty($photo)) {
+    $pdf->Image($photo, 145, 50, 45, 55);
+} else {
+    $pdf->Rect(145, 50, 45, 55);
+    $pdf->SetXY(145, 106);
+    $pdf->SetFont('Arial','I',8);
+    $pdf->Cell(45,4,'Photo',0,0,'C');
+}
+
+// For consistent alignment
+$pdf->SetXY(10, 55);
+
+$fields = [
+    'Reg No.' => $cadet_id,
+    'Name' => $cadet_name,
+    'Address' => $address,
+    'Blood Group' => $bloodgroup,
+    'Contact No.' => $mobile,
+    'Father' => $father,
+    'Mother' => $mother,
+    'DOB' => $dob,
+    'Nationality' => $nationality,
+    'State' => $state,
+    'District' => $district,
+    'Gender' => $gender,
+    'Police Station' => $police,
+    'Qualification' => $qualification,
+    'School/College' => $school,
+    'ID Mark' => $idmark,
+    'Aadhaar' => $aadhaar
 ];
 
-foreach($fields as $label=>$value){
-    $pdf->Cell(50,8,$label.':',0,0);
-    $pdf->MultiCell(0,8,$value);
+$pdf->SetFont('Arial','',11);
+foreach ($fields as $label => $value) {
+    $pdf->SetFont('Arial','B',11);
+    $pdf->Cell(40,7,$label.':',0,0);
+    $pdf->SetFont('Arial','',11);
+    $pdf->MultiCell(90,7,$value,0,1);
 }
 
-if(file_exists($photo)){
-    $pdf->Ln(5);
-    $pdf->Cell(0,8,'Photo:',0,1);
-    $pdf->Image($photo,10,$pdf->GetY(),40,50);
-}
+echo "<h2>Enrollment Successful!</h2>";
+echo "<p><strong>Registration No:</strong> $cadet_id</p>";
+echo "<p><strong>Name:</strong> $cadet_name</p>";
+echo "<p><strong>Mobile:</strong> $mobile</p>";
+echo "<p><strong>Blood Group:</strong> $bloodgroup</p>";
+echo "<p><a href='cadet_enrollment.php'>Submit Another Enrollment</a></p>";
 
-// Save PDF to uploads and give download link (prevents headers-already-sent issues)
-$pdfFile = $upload_dir . "Cadet_Enrollment_{$cadet_id}.pdf";
-$pdfSave = $pdf->Output('F', $pdfFile);
-
-if($pdfSave){
-    echo "<p><a href='$pdfFile' target='_blank'>Download your enrollment PDF</a></p>";
-} else {
-    echo "<p><strong>Warning:</strong> PDF could not be created. Please contact admin.</p>";
-}
-?>
+mysqli_close($conn);
+exit();

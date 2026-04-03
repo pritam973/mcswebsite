@@ -6,14 +6,19 @@ if(!isset($_SESSION['cadet_id'])){
 }
 $cadet_name = $_SESSION['cadet_name'];
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Cadet Enrollment</title>
+
 <link rel="stylesheet" href="cadet_enrollment.css">
+
 </head>
+
 <body>
 
 <nav class="navbar">
@@ -30,6 +35,7 @@ $cadet_name = $_SESSION['cadet_name'];
 </div>
 
 <form action="cadet_enrollment_process.php" method="POST" enctype="multipart/form-data">
+
 <label>Name<input type="text" name="name" required></label>
 <label>Father<input type="text" name="father" required></label>
 <label>Mother<input type="text" name="mother" required></label>
@@ -40,6 +46,7 @@ $cadet_name = $_SESSION['cadet_name'];
 <label>District<input type="text" name="district" required></label>
 <label>Mobile<input type="text" name="mobile" required></label>
 <label>Blood Group<input type="text" name="bloodgroup" required></label>
+
 <label>Gender
 <select name="gender" required>
 <option value="">Select</option>
@@ -47,6 +54,7 @@ $cadet_name = $_SESSION['cadet_name'];
 <option value="Female">Female</option>
 </select>
 </label>
+
 <label>Police<input type="text" name="police" required></label>
 <label>Qualification<input type="text" name="qualification" required></label>
 <label>School<input type="text" name="school" required></label>
@@ -61,10 +69,53 @@ $cadet_name = $_SESSION['cadet_name'];
 <label>Bond Paper<input type="file" name="bondPaper" required></label>
 <label>Declaration<input type="file" name="declaration" required></label>
 <label>Medical Certificate<input type="file" name="medicalCert" required></label>
-<label>Photo<input type="file" name="photo" required></label>
+
+<label>Photo<input type="file" name="photo" onchange="previewImage(event)" required></label>
+<img id="preview" width="100" style="margin-bottom:10px;">
+
 <label>Signature<input type="file" name="signature" required></label>
 
 <button type="submit">Submit</button>
+
 </form>
+
+<script>
+// Clear form after successful submission
+window.addEventListener('load', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('submitted') === 'true') {
+        // Clear all form fields
+        document.querySelector('form').reset();
+        // Clear image preview
+        const preview = document.getElementById('preview');
+        if (preview) {
+            preview.src = '';
+            preview.style.display = 'none';
+        }
+        // Remove the submitted parameter from URL
+        const url = new URL(window.location);
+        url.searchParams.delete('submitted');
+        window.history.replaceState({}, '', url);
+    }
+});
+
+// Image preview function
+function previewImage(event) {
+    const preview = document.getElementById('preview');
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.src = '';
+        preview.style.display = 'none';
+    }
+}
+</script>
+
 </body>
 </html>

@@ -129,5 +129,20 @@ enctype="multipart/form-data">
 
 </form>
 
+<script>
+// Clear form after successful submission
+window.addEventListener('load', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('submitted') === 'true') {
+        // Clear all form fields
+        document.querySelector('form').reset();
+        // Remove the submitted parameter from URL
+        const url = new URL(window.location);
+        url.searchParams.delete('submitted');
+        window.history.replaceState({}, '', url);
+    }
+});
+</script>
+
 </body>
 </html>
