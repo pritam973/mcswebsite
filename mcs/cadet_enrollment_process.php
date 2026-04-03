@@ -1,183 +1,118 @@
 <?php
-require_once 'config.php';
-session_start();
+if(!file_exists(__DIR__ . '/fpdf/fpdf.php')){
+    die("FPDF file missing");
+    }
+error_reporting(E_ALL);
+ini_set('display_errors',1);
 
-if($_SERVER['REQUEST_METHOD'] !== 'POST'){
-    header("Location: cadet_enrollment.php");
-    exit();
+$conn = mysqli_connect("localhost","root","","mcs1");
+
+if(!$conn){
+die("Connection Failed");
 }
 
-if(!isset($_SESSION['cadet_id'])){
-    header("Location: cadet_login.html");
-    exit();
+/* GET DATA */
+
+$name = $_POST['name'] ?? '';
+$father = $_POST['father'] ?? '';
+$mother = $_POST['mother'] ?? '';
+$dob = $_POST['dob'] ?? '';
+$nationality = $_POST['nationality'] ?? '';
+$address = $_POST['address'] ?? '';
+$state = $_POST['state'] ?? '';
+$district = $_POST['district'] ?? '';
+$mobile = $_POST['mobile'] ?? '';
+$bloodgroup = $_POST['bloodgroup'] ?? '';
+$gender = $_POST['gender'] ?? '';
+$police = $_POST['police'] ?? '';
+$qualification = $_POST['qualification'] ?? '';
+$school = $_POST['school'] ?? '';
+$idmark = $_POST['idmark'] ?? '';
+$aadhaar = $_POST['aadhaar'] ?? '';
+
+/* ======================
+   GENERATE CADET ID
+====================== */
+
+$year = date("Y");
+
+$genderCode = ($gender=="Male") ? "SD" : "SW";
+
+$prefix = "WB".$year.$genderCode."MCS777";
+
+$query = "SELECT cadet_id FROM cadet_enrollment 
+WHERE cadet_id LIKE '$prefix%' 
+ORDER BY cadet_id DESC LIMIT 1";
+
+$result = mysqli_query($conn,$query);
+
+if(mysqli_num_rows($result)>0){
+$row = mysqli_fetch_assoc($result);
+$last = substr($row['cadet_id'],-3);
+$num = intval($last)+1;
+}else{
+$num = 1;
 }
 
-// Form Data
-$cadet_name      = trim($_POST['name'] ?? '');
-$father          = trim($_POST['father'] ?? '');
-$mother          = trim($_POST['mother'] ?? '');
-$dob             = trim($_POST['dob'] ?? '');
-$nationality     = trim($_POST['nationality'] ?? '');
-$address         = trim($_POST['address'] ?? '');
-$state           = trim($_POST['state'] ?? '');
-$district        = trim($_POST['district'] ?? '');
-$mobile          = trim($_POST['mobile'] ?? '');
-$bloodgroup      = trim($_POST['bloodgroup'] ?? '');
-$gender          = trim($_POST['gender'] ?? 'Male');
-$police          = trim($_POST['police'] ?? '');
-$qualification   = trim($_POST['qualification'] ?? '');
-$school          = trim($_POST['school'] ?? '');
-$idmark          = trim($_POST['idmark'] ?? '');
-$aadhaar         = trim($_POST['aadhaar'] ?? '');
+$num = str_pad($num,3,"0",STR_PAD_LEFT);
 
-// ------------------------
-// ID Generation
-// ------------------------
-function generateID($conn,$gender,$table,$id_column){
-    $year = date('Y');
-    $gender_code = $gender==='Male'?'SD':'SW';
-    $prefix="WB{$year}{$gender_code}MCS777";
+$cadet_id = $prefix.$num;
 
-    $sql="SELECT $id_column FROM $table WHERE gender=? AND $id_column LIKE ? ORDER BY $id_column DESC LIMIT 1";
-    $stmt = $conn->prepare($sql);
-    $likePattern=$prefix."%";
-    $stmt->bind_param("ss",$gender,$likePattern);
-    $stmt->execute();
-    $stmt->bind_result($lastID);
-    $stmt->fetch();
-    $stmt->close();
+/* ======================
+   FILE UPLOAD
+====================== */
 
-    $number = $lastID ? (int)substr($lastID,-3)+1 : 1;
-    return $prefix.str_pad($number,3,'0',STR_PAD_LEFT);
+/* ======================
+   FILE UPLOAD (ALL FILES)
+====================== */
+
+$upload_dir = "uploads/";
+
+if(!is_dir($upload_dir)){
+mkdir($upload_dir,0777,true);
 }
 
-$cadet_id = generateID($conn,$gender,'cadet_enrollment','cadet_id');
+function uploadFile($input,$upload_dir){
 
-// ------------------------
-// File Uploads
-// ------------------------
-$upload_dir="uploads/";
-if(!is_dir($upload_dir)) mkdir($upload_dir,0777,true);
-
-function uploadFile($fileInput,$upload_dir){
-    if(!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error']!=0) return '';
-    $filename = time().'_'.preg_replace('/[^A-Za-z0-9\.\-_]/','',basename($_FILES[$fileInput]['name']));
-    $target = $upload_dir.$filename;
-    return move_uploaded_file($_FILES[$fileInput]['tmp_name'],$target)?$target:'';
+if(!isset($_FILES[$input]) || $_FILES[$input]['error']!=0){
+return "";
 }
 
-$aadhaarCard   = uploadFile("aadhaarCard",$upload_dir);
-$bankPassbook  = uploadFile("bankPassbook",$upload_dir);
-$birthCert     = uploadFile("birthCert",$upload_dir);
-$marksheet     = uploadFile("marksheet",$upload_dir);
-$bondPaper     = uploadFile("bondPaper",$upload_dir);
-$declaration   = uploadFile("declaration",$upload_dir);
-$medicalCert   = uploadFile("medicalCert",$upload_dir);
-$photo         = uploadFile("photo",$upload_dir);
-$signature     = uploadFile("signature",$upload_dir);
+$filename = time().'_'.basename($_FILES[$input]['name']);
+$target = $upload_dir.$filename;
 
-// ------------------------
-// Insert into Database
-// ------------------------
-$insert_sql = "INSERT INTO cadet_enrollment
-(cadet_id,name,father,mother,dob,nationality,address,state,district,mobile,bloodgroup,gender,police,qualification,school,idmark,aadhaar,aadhaarCard,bankPassbook,birthCert,bondPaper,declaration,medicalCert,photo,signature)
-VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+move_uploaded_file($_FILES[$input]['tmp_name'],$target);
 
-$stmt = $conn->prepare($insert_sql);
-if(!$stmt){
-    die("DB Prepare failed: " . $conn->error);
+return $target;
 }
 
-$bindResult = $stmt->bind_param("sssssssssssssssssssssssss",
-    $cadet_id,$cadet_name,$father,$mother,$dob,$nationality,$address,$state,$district,$mobile,$bloodgroup,$gender,$police,$qualification,$school,$idmark,$aadhaar,$aadhaarCard,$bankPassbook,$birthCert,$bondPaper,$declaration,$medicalCert,$photo,$signature
-);
-if(!$bindResult){
-    die("DB Bind failed: " . $stmt->error);
-}
+/* ALL FILES */
 
-$execResult = $stmt->execute();
-if(!$execResult){
-    die("DB Execute failed: " . $stmt->error);
-}
+$aadhaarCard = uploadFile("aadhaarCard",$upload_dir);
+$bankPassbook = uploadFile("bankPassbook",$upload_dir);
+$birthCert = uploadFile("birthCert",$upload_dir);
+$marksheet = uploadFile("marksheet",$upload_dir);
+$bondPaper = uploadFile("bondPaper",$upload_dir);
+$declaration = uploadFile("declaration",$upload_dir);
+$medicalCert = uploadFile("medicalCert",$upload_dir);
+$photo = uploadFile("photo",$upload_dir);
+$signature = uploadFile("signature",$upload_dir);
 
-$stmt->close();
+/* ======================
+   INSERT DATABASE
+====================== */
 
-// ------------------------
-// Generate and Download PDF
-// ------------------------
-require('fpdf/fpdf.php');
+$sql = "INSERT INTO cadet_enrollment
+(cadet_id,name,father,mother,dob,nationality,address,state,district,mobile,bloodgroup,gender,police,qualification,school,idmark,aadhaar,photo)
 
-$pdf = new FPDF('P','mm','A4');
-$pdf->SetAutoPageBreak(true, 15);
-$pdf->AddPage();
+VALUES
+('$cadet_id','$name','$father','$mother','$dob','$nationality','$address','$state','$district','$mobile','$bloodgroup','$gender','$police','$qualification','$school','$idmark','$aadhaar','$photo')";
 
-// Logo top center
-$logoPath = 'logo.jpeg';
-if (file_exists($logoPath)) {
-    $pdf->Image($logoPath, 85, 10, 40);
-}
+mysqli_query($conn,$sql);
 
-$pdf->Ln(30);
-$pdf->SetFont('Arial','B',18);
-$pdf->Cell(0,10,'MARINE COMMAND SQUAD',0,1,'C');
-$pdf->SetFont('Arial','B',14);
-$pdf->Cell(0,10,'CADET ENROLLMENT FORM',0,1,'C');
-$pdf->Ln(5);
+/* ======================
+   GENERATE PDF
+====================== */
 
-// Cadet identity block
-$pdf->SetFont('Arial','B',12);
-$pdf->Cell(35,8,'Registration:',0,0);
-$pdf->SetFont('Arial','',12);
-$pdf->Cell(0,8,$cadet_id,0,1);
-$pdf->Ln(3);
 
-// Portrait area
-if (file_exists($photo) && !empty($photo)) {
-    $pdf->Image($photo, 145, 50, 45, 55);
-} else {
-    $pdf->Rect(145, 50, 45, 55);
-    $pdf->SetXY(145, 106);
-    $pdf->SetFont('Arial','I',8);
-    $pdf->Cell(45,4,'Photo',0,0,'C');
-}
-
-// For consistent alignment
-$pdf->SetXY(10, 55);
-
-$fields = [
-    'Reg No.' => $cadet_id,
-    'Name' => $cadet_name,
-    'Address' => $address,
-    'Blood Group' => $bloodgroup,
-    'Contact No.' => $mobile,
-    'Father' => $father,
-    'Mother' => $mother,
-    'DOB' => $dob,
-    'Nationality' => $nationality,
-    'State' => $state,
-    'District' => $district,
-    'Gender' => $gender,
-    'Police Station' => $police,
-    'Qualification' => $qualification,
-    'School/College' => $school,
-    'ID Mark' => $idmark,
-    'Aadhaar' => $aadhaar
-];
-
-$pdf->SetFont('Arial','',11);
-foreach ($fields as $label => $value) {
-    $pdf->SetFont('Arial','B',11);
-    $pdf->Cell(40,7,$label.':',0,0);
-    $pdf->SetFont('Arial','',11);
-    $pdf->MultiCell(90,7,$value,0,1);
-}
-
-echo "<h2>Enrollment Successful!</h2>";
-echo "<p><strong>Registration No:</strong> $cadet_id</p>";
-echo "<p><strong>Name:</strong> $cadet_name</p>";
-echo "<p><strong>Mobile:</strong> $mobile</p>";
-echo "<p><strong>Blood Group:</strong> $bloodgroup</p>";
-echo "<p><a href='cadet_enrollment.php'>Submit Another Enrollment</a></p>";
-
-mysqli_close($conn);
-exit();
+?>

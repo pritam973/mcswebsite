@@ -1,47 +1,44 @@
 <?php
 
-require_once 'config.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start();
 
-// Validate input
-if (!isset($_POST['mobnumber']) || !isset($_POST['password'])) {
-    die("Missing login credentials");
+$conn = mysqli_connect("localhost","root","","mcs1");
+
+if(!$conn){
+die("Database Connection Failed");
 }
 
-$mobile = trim($_POST['mobnumber']);
-$password = trim($_POST['password']);
+$mobile = $_POST['mobnumber'];
+$password = $_POST['password'];
 
-if (empty($mobile) || empty($password)) {
-    die("Mobile number and password are required");
+$sql = "SELECT * FROM student_register WHERE mobile='$mobile'";
+
+$result = mysqli_query($conn,$sql);
+
+if(mysqli_num_rows($result)==1){
+
+$row = mysqli_fetch_assoc($result);
+
+if(password_verify($password,$row['password'])){
+
+$_SESSION['cadet_name'] = $row['cadetName'];
+$_SESSION['cadet_id'] = $row['id'];
+
+header("Location: cadet_dashboard.php");
+
+}else{
+
+echo "Incorrect Password";
+
 }
 
-// Use prepared statement to prevent SQL injection
-$stmt = $conn->prepare("SELECT id, cadetName, password FROM student_register WHERE mobile = ?");
-if (!$stmt) {
-    die("Database error: " . $conn->error);
+}else{
+
+echo "Cadet Not Registered";
+
 }
 
-$stmt->bind_param("s", $mobile);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows == 1) {
-    $row = $result->fetch_assoc();
-
-    if (password_verify($password, $row['password'])) {
-        $_SESSION['cadet_name'] = htmlspecialchars($row['cadetName']);
-        $_SESSION['cadet_id'] = $row['id'];
-        $stmt->close();
-        header("Location: cadet_dashboard.php");
-        exit();
-    } else {
-        $stmt->close();
-        die("Incorrect Password");
-    }
-} else {
-    $stmt->close();
-    die("Cadet Not Registered");
-}
-
-mysqli_close($conn);
 ?>

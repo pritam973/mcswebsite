@@ -1,9 +1,11 @@
 <?php
 session_start();
+
 if(!isset($_SESSION['cadet_id'])){
-    header("Location: cadet_login.html");
-    exit();
+header("Location: cadet_login.html");
+exit();
 }
+
 $cadet_name = $_SESSION['cadet_name'];
 ?>
 
@@ -17,10 +19,14 @@ $cadet_name = $_SESSION['cadet_name'];
 
 <link rel="stylesheet" href="cadet_enrollment.css">
 
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 </head>
 
 <body>
 
+<!-- NAVBAR -->
 <nav class="navbar">
 <div class="logo">
 <img src="logo.jpeg" class="logo-img">
@@ -28,12 +34,14 @@ $cadet_name = $_SESSION['cadet_name'];
 </div>
 </nav>
 
+<!-- HEADER -->
 <div class="header-center">
 <h1 class="main-title">Marine Command Squad</h1>
 <h2 class="subtitle">Cadet Enrollment Form</h2>
 <p class="welcome">Welcome Cadet: <b><?php echo $cadet_name; ?></b></p>
 </div>
 
+<!-- FORM -->
 <form action="cadet_enrollment_process.php" method="POST" enctype="multipart/form-data">
 
 <label>Name<input type="text" name="name" required></label>
@@ -69,53 +77,94 @@ $cadet_name = $_SESSION['cadet_name'];
 <label>Bond Paper<input type="file" name="bondPaper" required></label>
 <label>Declaration<input type="file" name="declaration" required></label>
 <label>Medical Certificate<input type="file" name="medicalCert" required></label>
-
-<label>Photo<input type="file" name="photo" onchange="previewImage(event)" required></label>
-<img id="preview" width="100" style="margin-bottom:10px;">
-
+<label>Photo<input type="file" name="photo" required></label>
 <label>Signature<input type="file" name="signature" required></label>
 
-<button type="submit">Submit</button>
+<!-- BUTTON -->
+<button type="button" onclick="generateIDCard()">Download ID Card</button>
 
 </form>
 
-<script>
-// Clear form after successful submission
-window.addEventListener('load', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('submitted') === 'true') {
-        // Clear all form fields
-        document.querySelector('form').reset();
-        // Clear image preview
-        const preview = document.getElementById('preview');
-        if (preview) {
-            preview.src = '';
-            preview.style.display = 'none';
-        }
-        // Remove the submitted parameter from URL
-        const url = new URL(window.location);
-        url.searchParams.delete('submitted');
-        window.history.replaceState({}, '', url);
-    }
-});
-
-// Image preview function
-function previewImage(event) {
-    const preview = document.getElementById('preview');
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            preview.src = e.target.result;
-            preview.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-    } else {
-        preview.src = '';
-        preview.style.display = 'none';
-    }
-}
-</script>
-
 </body>
 </html>
+
+<script>
+
+async function generateIDCard(){
+
+const { jsPDF } = window.jspdf;
+const pdf = new jsPDF();
+
+// GET VALUES
+let name = document.querySelector('[name="name"]').value;
+let address = document.querySelector('[name="address"]').value;
+let blood = document.querySelector('[name="bloodgroup"]').value;
+let mobile = document.querySelector('[name="mobile"]').value;
+
+// YEAR + GENDER
+let year = new Date().getFullYear();
+let gender = document.querySelector('[name="gender"]').value;
+let genderCode = (gender === "Male") ? "SD" : "SW";
+
+// ID
+let regNo = "WB" + year + genderCode + "MCS777001";
+
+// BORDER
+pdf.rect(10, 10, 190, 120);
+
+// LOAD LOGO
+let logo = new Image();
+logo.src = "logo.jpeg"; // make sure this file exists
+
+logo.onload = function(){
+
+// LOGO
+pdf.addImage(logo, 'PNG', 85, 12, 40, 25);
+
+// HEADER
+pdf.setFont("helvetica","bold");
+pdf.setFontSize(16);
+pdf.text("MARINE COMMAND SQUAD", 105, 45, null, null, "center");
+
+pdf.setFontSize(12);
+pdf.text("CADET ENROLLMENT", 105, 53, null, null, "center");
+
+// DETAILS
+pdf.setFont("helvetica","normal");
+pdf.setFontSize(11);
+
+pdf.text("Reg No: " + regNo, 20, 70);
+pdf.text("Name: " + name, 20, 80);
+
+// MULTILINE ADDRESS
+let splitAddress = pdf.splitTextToSize("Address: " + address, 90);
+pdf.text(splitAddress, 20, 90);
+
+pdf.text("Blood Group: " + blood, 20, 110);
+pdf.text("Contact No: " + mobile, 20, 120);
+
+// PHOTO BOX
+pdf.rect(140, 70, 40, 40);
+
+// PHOTO
+let fileInput = document.querySelector('[name="photo"]');
+let file = fileInput.files[0];
+
+if(file){
+let reader = new FileReader();
+
+reader.onload = function(e){
+pdf.addImage(e.target.result, 'JPEG', 140, 70, 40, 40);
+pdf.save("Cadet_ID_Card.pdf");
+}
+
+reader.readAsDataURL(file);
+
+}else{
+pdf.save("Cadet_ID_Card.pdf");
+}
+
+};
+
+}
+</script>
